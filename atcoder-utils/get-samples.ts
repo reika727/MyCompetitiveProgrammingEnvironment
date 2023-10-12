@@ -24,8 +24,8 @@ const downloadTasks =
         const samples: { input: string; output: string }[] = []
         for (let i = 0; i < nodes.length; i += 2) {
           samples.push({
-            input: nodes[i].textContent!,
-            output: nodes[i + 1].textContent!
+            input: nodes[i]?.textContent ?? '',
+            output: nodes[i + 1]?.textContent ?? ''
           })
         }
 
