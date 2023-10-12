@@ -1,6 +1,17 @@
 import fs from 'fs'
 import jsdom from 'jsdom'
 
+const fetch_retry_after = async (ms: number, url: string, options = {}) => {
+  while (true) {
+    const response = await fetch(url, options)
+    if (response.status == 429) {
+      await new Promise(_ => setTimeout(_, ms))
+    } else {
+      return response
+    }
+  }
+}
+
 const [ cookiePath, contestId ] = process.argv.slice(2)
 
 const cookieJar = await jsdom.CookieJar.fromJSON(fs.readFileSync(cookiePath, 'utf8'))
@@ -16,9 +27,19 @@ const downloadTasks =
   .then(
     taskURLs => taskURLs.map(
       async (taskURL) => {
-        const nodes =
-          await jsdom.JSDOM.fromURL(taskURL, { cookieJar })
-          .then(dom => dom.window.document.querySelectorAll('#task-statement > .lang > .lang-ja h3+pre'))
+        const text =
+          await fetch_retry_after(
+            500,
+            taskURL,
+            {
+              headers: {
+                Cookie: cookieJar.getCookieStringSync('https://atcoder.jp')
+              }
+            }
+          )
+          .then(response => response.text())
+
+        const nodes = new jsdom.JSDOM(text).window.document.querySelectorAll('#task-statement > .lang > .lang-ja h3+pre')
         /* see https://img.atcoder.jp/public/8cd1ac6/js/contest.js : 63 */
 
         const samples: { input: string; output: string }[] = []
