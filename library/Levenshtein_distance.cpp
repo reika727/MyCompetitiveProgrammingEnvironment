@@ -1,5 +1,5 @@
 /*
-https://atcoder.jp/contests/pastbook2022/submissions/46681659
+https://atcoder.jp/contests/pastbook2022/submissions/46696832
 */
 
 template <
@@ -38,7 +38,7 @@ std::size_t Levenshtein_distance(
                 std::min({
                     distance[j + 1] + 1,
                     distance[j] + 1,
-                    prev + (pred(proj1(r1[i]), proj2(r2[j])) ? 0 : 1)
+                    prev + (std::invoke(pred, std::invoke(proj1, r1[i]), std::invoke(proj2, r2[j])) ? 0 : 1)
                 })
             );
         }
