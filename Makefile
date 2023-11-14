@@ -1,5 +1,3 @@
-#CXX       := /usr/bin/g++
-#HEADER    := /usr/include/$(shell $(CXX) -dumpmachine)/c++/$(shell $(CXX) -dumpversion)/bits/stdc++.h
 CXX       := /usr/local/gcc/gcc-12.2.0/bin/g++
 G++BINDIR := $(shell dirname $(shell readlink -f $(shell which $(CXX))))
 HEADER    := $(G++BINDIR)/../include/c++/$(shell $(CXX) -dumpversion)/$(shell $(CXX) -dumpmachine)/bits/stdc++.h
@@ -33,7 +31,3 @@ clean:
 cleanall: clean
 	$(RM) -r bits/
 	npm run clean --prefix atcoder-utils/
-
-#.PHONY: relink
-#relink:
-#	sudo ln -nfs $(G++BINDIR)/../lib64/libstdc++.so.6.0.30 /lib/x86_64-linux-gnu/libstdc++.so.6
