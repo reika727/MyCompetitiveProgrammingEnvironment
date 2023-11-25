@@ -3,8 +3,8 @@
 if [ -f login.cookie.json ]; then
         echo 'already loged in to AtCoder.'
 else
-        read -p 'User Name: ' USER_NAME
-        read -sp 'Password: ' PASSWORD
+        read -rp 'User Name: ' USER_NAME
+        read -rsp 'Password: ' PASSWORD
         echo
         echo 'logging in to AtCoder...'
         if JSON=$(node atcoder-utils/dist/login "$USER_NAME" "$PASSWORD"); then

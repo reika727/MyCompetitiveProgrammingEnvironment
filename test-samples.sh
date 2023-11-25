@@ -27,7 +27,7 @@ while read -r TEST_CASE; do
                 echo "$OUTPUT" | pr --omit-header --indent=2
                 echo ----------------
         fi
-done <<< $(jq --compact-output --raw-output ."$PROBLEM_ID"[] "$JSON_NAME")
+done <<< "$(jq --compact-output --raw-output ."$PROBLEM_ID"[] "$JSON_NAME")"
 
 if [ "$wrong_cases" != 0 ]; then
         echo -e "\e[31;1m$wrong_cases case(s) failed.\e[m"
