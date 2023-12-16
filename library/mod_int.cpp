@@ -1,10 +1,12 @@
 /*
-https://atcoder.jp/contests/abc162/submissions/11866750
-https://atcoder.jp/contests/abc145/submissions/11866908
+https://atcoder.jp/contests/abc162/submissions/48601365
+https://atcoder.jp/contests/abc145/submissions/48601385
+https://atcoder.jp/contests/abc333/submissions/48601177
 */
 template <unsigned long long mod>
 class basic_mod_int {
 private:
+    inline static std::map<unsigned long long, basic_mod_int> cache;
     unsigned long long num;
 
 public:
@@ -31,7 +33,11 @@ public:
     }
     basic_mod_int operator~() const
     {
-        return pow(*this, mod - 2);
+        if (cache.contains(num)) {
+            return cache[num];
+        } else {
+            return cache[num] = pow(*this, mod - 2);
+        }
     }
     basic_mod_int operator+(const basic_mod_int &mi) const
     {
