@@ -7,20 +7,19 @@ async function getLoginCookieJar(userName: string, password: string) {
     .then((response) => response.headers.getSetCookie())
   const csrfToken = /csrf_token:(.+?=)/.exec(decodeURIComponent(temporaryCookies[1]))?.[1]!
 
-  const headers = new Headers
-  for (const temporaryCookie of temporaryCookies) {
-    headers.append('Cookie', temporaryCookie)
-  }
-
   const body = new FormData
-  body.append('username', userName)
-  body.append('password', password)
-  body.append('csrf_token', csrfToken)
+  body.set('username', userName)
+  body.set('password', password)
+  body.set('csrf_token', csrfToken)
 
   const setCookie = fetch(url, {
     method: 'POST',
     redirect: 'manual',
-    headers,
+    headers: new Headers(
+      temporaryCookies.map(
+        temporaryCookie => ['Cookie', temporaryCookie]
+      )
+    ),
     body
   }).then((response) => response.headers.getSetCookie())
 
