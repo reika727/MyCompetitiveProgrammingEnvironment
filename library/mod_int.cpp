@@ -1,7 +1,7 @@
 /*
-https://atcoder.jp/contests/abc162/submissions/48601365
-https://atcoder.jp/contests/abc145/submissions/48601385
-https://atcoder.jp/contests/abc333/submissions/48601177
+https://atcoder.jp/contests/abc162/submissions/48622618
+https://atcoder.jp/contests/abc145/submissions/48622645
+https://atcoder.jp/contests/abc333/submissions/48622686
 */
 template <unsigned long long mod>
 class basic_mod_int {
@@ -12,7 +12,13 @@ private:
 public:
     static basic_mod_int pow(basic_mod_int x, unsigned long long y)
     {
-        return y == 0 ? 1 : y % 2 == 0 ? pow(x * x, y / 2) : x * pow(x, y - 1);
+        basic_mod_int ans = 1;
+        for (; y; x *= x, y >>= 1) {
+            if (y & 1) {
+                ans *= x;
+            }
+        }
+        return ans;
     }
     basic_mod_int() = default;
     basic_mod_int(unsigned long long n)
