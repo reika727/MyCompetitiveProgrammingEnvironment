@@ -6,7 +6,6 @@ PROBLEM_ID=$2
 
 ./test-samples.sh "$CONTEST_ID" "$PROBLEM_ID"
 
-echo -e '\e[32;1mALL TEST CASE PASSED!\e[m'
 echo 'submitting source code...'
 
 COOKIE_STRING=$(

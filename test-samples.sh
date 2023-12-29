@@ -33,3 +33,5 @@ if [ "$wrong_cases" != 0 ]; then
         echo -e "\e[31;1m$wrong_cases case(s) failed.\e[m"
         exit 1
 fi
+
+echo -e '\e[32;1mALL TEST CASE PASSED!\e[m'
