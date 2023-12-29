@@ -4,7 +4,7 @@ async function getLoginCookieJar(userName: string, password: string) {
   const url = 'https://atcoder.jp/login'
 
   const temporaryCookies = await fetch(url)
-    .then((response) => response.headers.getSetCookie())
+    .then(response => response.headers.getSetCookie())
   const csrfToken = /csrf_token:(.+?=)/.exec(decodeURIComponent(temporaryCookies[1]))?.[1]!
 
   const body = new FormData
@@ -21,7 +21,7 @@ async function getLoginCookieJar(userName: string, password: string) {
       )
     ),
     body
-  }).then((response) => response.headers.getSetCookie())
+  }).then(response => response.headers.getSetCookie())
 
   const cookieJar = new tough.CookieJar()
   for (const cookie of await setCookie) {

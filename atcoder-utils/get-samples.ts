@@ -14,7 +14,7 @@ const downloadTasks =
   )
   .then(
     col_sm_12s => col_sm_12s.map(
-      async (col_sm_12) => {
+      async col_sm_12 => {
         const nodes = col_sm_12.querySelectorAll('#task-statement > .lang > .lang-ja h3+pre')
 
         const samples: { input: string; output: string }[] = []
@@ -32,6 +32,6 @@ const downloadTasks =
   )
 
 await Promise.all(downloadTasks)
-.then((samples) => {
+.then(samples => {
   console.log(JSON.stringify(Object.fromEntries(samples), null, 2))
 })
