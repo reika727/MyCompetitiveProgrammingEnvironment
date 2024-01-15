@@ -15,10 +15,10 @@ COOKIE_STRING=$(
 )
 
 CSRF_TOKEN=$(
-          echo "$COOKIE_STRING"                                             \
-        | sed 's/%/\\x/g'                                                   \
-        | printf '%b' "$(cat)"                                              \
-        | grep --text --extended-regexp --only-matching 'csrf_token:(.+?=)' \
+          echo "$COOKIE_STRING"                                           \
+        | sed 's/%/\\x/g'                                                 \
+        | printf '%b' "$(cat)"                                            \
+        | grep --text --extended-regexp --only-matching 'csrf_token:.+?=' \
         | sed 's/csrf_token://'
 )
 
