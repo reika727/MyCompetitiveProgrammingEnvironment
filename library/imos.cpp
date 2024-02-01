@@ -1,5 +1,6 @@
 /*
 https://atcoder.jp/contests/abc338/submissions/49850308
+https://yukicoder.me/submissions/947472
 */
 
 template <class T, size_t Dimension>
