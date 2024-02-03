@@ -1,25 +1,61 @@
 /*
-https://atcoder.jp/contests/abc338/submissions/49897575
-https://yukicoder.me/submissions/947611
+https://atcoder.jp/contests/abc338/submissions/49980979
+https://yukicoder.me/submissions/947820
 */
 
-template <class T, size_t Dimension>
-class imos : protected std::vector<imos<T, Dimension - 1>> {
+template <std::default_initializable T, size_t Dimension>
+class imos
+    : protected std::conditional_t<
+        Dimension == 1,
+        std::vector<T>,
+        std::vector<imos<T, Dimension - 1>>
+      >
+{
+    static_assert(Dimension != 0, "Dimension must not be 0.");
     friend imos<T, Dimension + 1>;
 
-public:
-    using coordinate = std::array<std::size_t, Dimension>;
+private:
+    using lower_dimension = std::conditional_t<
+        Dimension == 1,
+        T,
+        imos<T, Dimension - 1>
+    >;
 
-    struct segment {
-        coordinate begin, end;
-    };
-
-    constexpr inline static std::size_t dimension = Dimension;
-
-protected:
-    T& get(const std::span<const std::size_t, Dimension> idxs)
+    imos<T, Dimension> &operator+=(const imos<T, Dimension> &ci)
     {
-        return (*this)[idxs.front()].get(idxs.template last<Dimension - 1>());
+        for (auto i = 0uz; i < this->size(); ++i) {
+            (*this)[i] += ci[i];
+        }
+        return *this;
+    }
+
+public:
+    explicit imos(const std::size_t size, const auto... sizes)
+        : std::vector<lower_dimension>(
+              size + 1,
+              lower_dimension(sizes...)
+          )
+    {
+        static_assert(
+            1 + sizeof...(sizes) == Dimension,
+            "Number of sizes must be equal to Dimension."
+        );
+        if (size == 0) {
+            throw std::invalid_argument("Each size of dimension must not be 0.");
+        }
+    }
+
+    const T& at(const std::size_t index, const auto... indices) const
+    {
+        static_assert(
+            1 + sizeof...(indices) == Dimension,
+            "Number of indices must be equal to Dimension."
+        );
+        if constexpr (sizeof...(indices) == 0) {
+            return (*this)[index];
+        } else {
+            return (*this)[index].at(indices...);
+        }
     }
 
     void set(
@@ -28,132 +64,52 @@ protected:
         const T weight
     )
     {
-        (*this)[begin.front()].set(
-            begin.template last<Dimension - 1>(),
-            end.template last<Dimension - 1>(),
-            weight
-        );
-        (*this)[end.front()].set(
-            begin.template last<Dimension - 1>(),
-            end.template last<Dimension - 1>(),
-            -weight
-        );
-    }
-
-    imos<T, Dimension> &operator+=(const imos<T, Dimension> &ci)
-    {
-        for (std::size_t i = 0; i < this->size(); ++i) {
-            (*this)[i] += ci[i];
+        const auto begin0 = std::min(begin.front(), this->size() - 1);
+        const auto end0 = std::min(end.front(), this->size() - 1);
+        if constexpr (Dimension > 1) {
+            (*this)[begin0].set(
+                begin.template last<Dimension - 1>(),
+                end.template last<Dimension - 1>(),
+                weight
+            );
+            (*this)[end0].set(
+                begin.template last<Dimension - 1>(),
+                end.template last<Dimension - 1>(),
+                -weight
+            );
+        } else {
+            (*this)[begin0] += weight;
+            (*this)[end0] -= weight;
         }
-        return *this;
-    }
-
-public:
-    using std::vector<imos<T, Dimension - 1>>::begin;
-    using std::vector<imos<T, Dimension - 1>>::end;
-    using std::vector<imos<T, Dimension - 1>>::operator[];
-
-    template <class... Sizes>
-    imos(const std::size_t size, const Sizes... sizes)
-        : std::vector<imos<T, Dimension - 1>>(
-              size + 1,
-              imos<T, sizeof...(Sizes)>(sizes...)
-          )
-    {
-    }
-
-    T& get(const coordinate &c)
-    {
-        return get(std::span{c});
-    }
-
-    void set(const segment &s, const T weight)
-    {
-        set(std::span{s.begin}, std::span{s.end}, weight);
-    }
-
-    void accumulate()
-    {
-        for (std::size_t i = 0; i < this->size() - 1; ++i) {
-            (*this)[i + 1] += (*this)[i];
-        }
-        for (auto &child : *this) {
-            child.accumulate();
-        }
-    }
-};
-
-template <class T>
-class imos<T, 1> : protected std::vector<T> {
-    friend imos<T, 2>;
-
-public:
-    using coordinate = std::array<std::size_t, 1>;
-
-    struct segment {
-        coordinate begin, end;
-    };
-
-    constexpr inline static std::size_t dimension = 1;
-
-private:
-    T& get(const std::span<const std::size_t, 1> idxs)
-    {
-        return (*this)[idxs.front()];
     }
 
     void set(
-        const std::span<const std::size_t, 1> begin,
-        const std::span<const std::size_t, 1> end,
+        const std::array<std::size_t, Dimension> &begin,
+        const std::array<std::size_t, Dimension> &end,
         const T weight
     )
     {
-        (*this)[begin.front()] += weight;
-        (*this)[end.front()] -= weight;
+        set(std::span{begin}, std::span{end}, weight);
     }
 
-    imos<T, 1> &operator+=(const imos<T, 1> &ci)
+    void set(std::size_t begin, std::size_t end, const T weight)
     {
-        for (std::size_t i = 0; i < this->size(); ++i) {
-            (*this)[i] += ci[i];
-        }
-        return *this;
-    }
-
-public:
-    using std::vector<T>::begin;
-    using std::vector<T>::end;
-    using std::vector<T>::operator[];
-
-    explicit imos(const std::size_t size)
-        : std::vector<T>(size + 1)
-    {
-    }
-
-    T& get(const coordinate &c)
-    {
-        return (*this)[c.front()];
-    }
-
-    T& get(const std::size_t idx)
-    {
-        return (*this)[idx];
-    }
-
-    void set(const segment &s, const T weight)
-    {
-        set(std::span{s.begin}, std::span{s.end}, weight);
-    }
-
-    void set(const size_t begin, const size_t end, const T weight)
-    {
-        set({.begin = begin, .end = end}, weight);
+        static_assert(
+            Dimension == 1,
+            "set(size_t, size_t, T) can be called only when Dimension == 1."
+        );
+        return set(std::array{begin}, std::array{end}, weight);
     }
 
     void accumulate()
     {
-        for (std::size_t i = 0; i < this->size() - 1; ++i) {
+        for (auto i = 0uz; i < this->size() - 1; ++i) {
             (*this)[i + 1] += (*this)[i];
+        }
+        if constexpr (Dimension > 1) {
+            for (auto &child : *this) {
+                child.accumulate();
+            }
         }
     }
 };
@@ -161,51 +117,58 @@ public:
 template <class T, size_t Dimension>
 class cyclic_imos final : public imos<T, Dimension> {
 public:
-    using typename imos<T, Dimension>::segment;
     using imos<T, Dimension>::imos;
 
-    void set_cyclic(const segment &s, const T weight)
+    void set_cyclic(
+        const std::span<const std::size_t, Dimension> begin,
+        const std::span<const std::size_t, Dimension> end,
+        const T weight
+    )
     {
-        this->set(s, weight);
-        for (unsigned i = 1; i < (1 << Dimension); ++i) {
-            segment correction;
-            for (unsigned j = 0; j < Dimension; ++j) {
-                if (i & (1 << j)) {
-                    if (s.begin[j] <= s.end[j]) {
-                        goto CONTINUE;
+        this->set(begin, end, weight);
+        if constexpr (Dimension > 1) {
+            for (unsigned i = 1; i < (1 << Dimension); ++i) {
+                std::array<std::size_t, Dimension> correction_begin, correction_end;
+                for (auto j = 0uz; j < Dimension; ++j) {
+                    if (i & (1 << j)) {
+                        if (begin[j] <= end[j]) {
+                            goto CONTINUE;
+                        }
+                        correction_begin[j] = 0;
+                        correction_end[j] = this->size() - 1;
+                    } else {
+                        correction_begin[j] = begin[j];
+                        correction_end[j] = end[j];
                     }
-                    correction.begin[j] = 0;
-                    correction.end[j] = this->size() - 1;
-                } else {
-                    correction.begin[j] = s.begin[j];
-                    correction.end[j] = s.end[j];
                 }
+                this->set(correction_begin, correction_end, weight);
+            CONTINUE:
+                ;
             }
-            this->set(correction, weight);
-        CONTINUE:
-            ;
-        }
-    }
-};
-
-template <class T>
-class cyclic_imos<T, 1> final : public imos<T, 1> {
-public:
-    using typename imos<T, 1>::segment;
-    using imos<T, 1>::imos;
-
-    void set_cyclic(const segment &s, const T weight)
-    {
-        this->set(s, weight);
-        if (s.begin.front() > s.end.front()) {
-            (*this).front() += weight;
-            (*this).back() -= weight;
+        } else {
+            if (begin.front() > end.front()) {
+                (*this).front() += weight;
+                (*this).back() -= weight;
+            }
         }
     }
 
-    void set_cyclic(const std::size_t begin, const std::size_t end, const T weight)
+    void set_cyclic(
+        const std::array<std::size_t, Dimension> &begin,
+        const std::array<std::size_t, Dimension> &end,
+        const T weight
+    )
     {
-        set_cyclic({.begin = begin, .end = end}, weight);
+        set_cyclic(std::span{begin}, std::span{end}, weight);
+    }
+
+    void set_cyclic(std::size_t begin, std::size_t end, const T weight)
+    {
+        static_assert(
+            Dimension == 1,
+            "set_cyclic(size_t, size_t, T) can be called only when Dimension == 1."
+        );
+        return set_cyclic(std::array{begin}, std::array{end}, weight);
     }
 };
 
