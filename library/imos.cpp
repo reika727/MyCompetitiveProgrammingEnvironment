@@ -1,6 +1,6 @@
 /*
-https://atcoder.jp/contests/abc338/submissions/49980979
-https://yukicoder.me/submissions/947820
+https://atcoder.jp/contests/abc338/submissions/49981374
+https://yukicoder.me/submissions/947830
 */
 
 template <std::default_initializable T, size_t Dimension>
@@ -21,16 +21,16 @@ private:
         imos<T, Dimension - 1>
     >;
 
-    imos<T, Dimension> &operator+=(const imos<T, Dimension> &ci)
+    imos<T, Dimension> &operator+=(const imos<T, Dimension> &im)
     {
         for (auto i = 0uz; i < this->size(); ++i) {
-            (*this)[i] += ci[i];
+            (*this)[i] += im[i];
         }
         return *this;
     }
 
 public:
-    explicit imos(const std::size_t size, const auto... sizes)
+    imos(const std::size_t size, const auto... sizes)
         : std::vector<lower_dimension>(
               size + 1,
               lower_dimension(sizes...)
@@ -40,9 +40,6 @@ public:
             1 + sizeof...(sizes) == Dimension,
             "Number of sizes must be equal to Dimension."
         );
-        if (size == 0) {
-            throw std::invalid_argument("Each size of dimension must not be 0.");
-        }
     }
 
     const T& at(const std::size_t index, const auto... indices) const
