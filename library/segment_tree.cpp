@@ -1,8 +1,7 @@
 /*
 https://atcoder.jp/contests/abc285/submissions/38096154
+https://atcoder.jp/contests/abc340/submissions/50190255
 */
-
-//TODO: implement operator[]
 
 template <typename T>
 class segment_tree final : private std::vector<T> {
@@ -39,6 +38,10 @@ public:
             r >>= 1;
         }
         return operation(L, R);
+    }
+    T at(std::size_t idx) const
+    {
+        return query(idx, idx + 1);
     }
     static segment_tree<T> sum(std::size_t n)
     {
