@@ -1,6 +1,7 @@
 /*
 https://atcoder.jp/contests/abc285/submissions/38096154
 https://atcoder.jp/contests/abc340/submissions/50190255
+https://atcoder.jp/contests/abc341/submissions/50393498
 */
 
 template <typename T>
