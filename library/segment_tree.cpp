@@ -1,7 +1,7 @@
 /*
-https://atcoder.jp/contests/abc285/submissions/38096154
-https://atcoder.jp/contests/abc340/submissions/50190255
-https://atcoder.jp/contests/abc341/submissions/50393498
+https://atcoder.jp/contests/abc285/submissions/50432712
+https://atcoder.jp/contests/abc340/submissions/50432774
+https://atcoder.jp/contests/abc341/submissions/50432795
 */
 
 template <typename T>
@@ -11,14 +11,14 @@ private:
     T identity;
 
 public:
-    segment_tree(std::size_t n, std::function<T(T, T)> opr, T id)
+    segment_tree(const std::size_t n, const auto opr, const T id)
         : operation(opr), identity(id)
     {
         std::size_t _n = 1;
         while (_n < n) _n <<= 1;
         this->resize((_n << 1) - 1, identity);
     }
-    void update(std::size_t idx, T val)
+    void update(std::size_t idx, const T val)
     {
         idx += this->size() / 2;
         (*this)[idx] = val;
@@ -40,24 +40,32 @@ public:
         }
         return operation(L, R);
     }
-    T at(std::size_t idx) const
+    T at(const std::size_t idx) const
     {
-        return query(idx, idx + 1);
+        return (*this)[idx + this->size() / 2];
     }
-    static segment_tree<T> sum(std::size_t n)
+    static segment_tree<T> sum(const std::size_t n)
     {
         return segment_tree<T>(n, std::plus<T>(), static_cast<T>(0));
     }
-    static segment_tree<T> product(std::size_t n)
+    static segment_tree<T> product(const std::size_t n)
     {
         return segment_tree<T>(n, std::multiplies<T>(), static_cast<T>(1));
     }
-    static segment_tree<T> max(std::size_t n, T id = std::numeric_limits<T>::min())
+    static segment_tree<T> max(const std::size_t n, const T id = std::numeric_limits<T>::min())
     {
         return segment_tree<T>(n, static_cast<const T &(*)(const T &, const T &)>(std::max), id);
     }
-    static segment_tree<T> min(std::size_t n, T id = std::numeric_limits<T>::max())
+    static segment_tree<T> min(const std::size_t n, const T id = std::numeric_limits<T>::max())
     {
         return segment_tree<T>(n, static_cast<const T &(*)(const T &, const T &)>(std::min), id);
+    }
+    static segment_tree<T> all(const std::size_t n)
+    {
+        return segment_tree<T>(n, std::logical_and(), true);
+    }
+    static segment_tree<T> any(const std::size_t n)
+    {
+        return segment_tree<T>(n, std::logical_or(), false);
     }
 };
