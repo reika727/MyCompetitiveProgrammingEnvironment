@@ -1,21 +1,20 @@
 /*
-https://atcoder.jp/contests/abc342/submissions/50620656
+https://atcoder.jp/contests/abc342/submissions/50642672
 */
 
 class prime_factorizer final
 {
 private:
-    std::vector<bool> is_prime{false, false, true};
-    std::vector<std::size_t> primes{2};
+    std::vector<bool> is_prime_offset2;
+    std::vector<std::size_t> primes;
 
     void expand(const std::size_t n)
     {
-        assert(n != std::numeric_limits<std::size_t>::max());
-        if (is_prime.size() > n) {
+        const auto previous_max = is_prime_offset2.size() + 1;
+        if (n <= previous_max) {
             return;
         }
-        const auto previous_max = is_prime.size() - 1;
-        is_prime.resize(n + 1, true);
+        is_prime_offset2.resize(n - 1, true);
         for (const auto prime : primes) {
             if (prime > n / prime) {
                 break;
@@ -25,14 +24,14 @@ private:
                 i <= n / prime;
                 ++i
             ) {
-                is_prime[i * prime] = false;
+                is_prime_offset2[i * prime - 2] = false;
             }
         }
-        for (auto prime = primes.back() + 1; prime <= n; ++prime) {
-            if (is_prime[prime]) {
+        for (auto prime = previous_max + 1; prime <= n; ++prime) {
+            if (is_prime_offset2[prime - 2]) {
                 primes.push_back(prime);
                 for (auto i = prime; i <= n / prime; ++i) {
-                    is_prime[i * prime] = false;
+                    is_prime_offset2[i * prime - 2] = false;
                 }
             }
         }
@@ -52,10 +51,10 @@ public:
         return primes;
     }
 
-    bool check(const std::size_t n)
+    bool is_prime(const std::size_t n)
     {
         expand(n);
-        return is_prime[n];
+        return n >= 2 && is_prime_offset2[n - 2];
     }
 
     struct factor final {
@@ -69,7 +68,7 @@ public:
             if (n <= 1) {
                 break;
             }
-            if (is_prime[n]) {
+            if (is_prime(n)) {
                 factors.emplace_back(n, 1);
                 break;
             }
