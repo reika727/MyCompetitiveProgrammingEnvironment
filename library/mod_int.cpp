@@ -1,7 +1,7 @@
 /*
-https://atcoder.jp/contests/abc162/submissions/50714576
-https://atcoder.jp/contests/abc145/submissions/50714592
-https://atcoder.jp/contests/abc333/submissions/50714598
+https://atcoder.jp/contests/abc162/submissions/50959288
+https://atcoder.jp/contests/abc145/submissions/50959272
+https://atcoder.jp/contests/abc333/submissions/50959297
 */
 
 template <std::unsigned_integral auto Mod>
@@ -11,28 +11,16 @@ public:
 
 private:
     inline static std::map<integer_type, basic_mod_int> inverse_cache;
-    constexpr inline static integer_type max = std::numeric_limits<integer_type>::max();
+    constexpr inline static auto max = std::numeric_limits<integer_type>::max();
     integer_type num;
 
 public:
-    constexpr inline static integer_type mod = Mod;
-
-    template <std::unsigned_integral T>
-    static basic_mod_int pow(basic_mod_int x, T y)
-    {
-        basic_mod_int ans = 1;
-        for (; y; x *= x, y >>= 1) {
-            if (y & 1) {
-                ans *= x;
-            }
-        }
-        return ans;
-    }
+    constexpr inline static auto mod = Mod;
 
     basic_mod_int() = default;
 
     basic_mod_int(integer_type n)
-        : num(n % mod)
+        : num(n < mod ? n : n % mod)
     {
     }
 
@@ -56,7 +44,7 @@ public:
         if (inverse_cache.contains(num)) {
             return inverse_cache[num];
         } else {
-            return inverse_cache[num] = pow(*this, mod - 2);
+            return inverse_cache[num] = pow(mod - 2);
         }
     }
 
@@ -88,8 +76,7 @@ public:
             } else {
                 basic_mod_int mult = 1;
                 auto a = *this;
-                auto b = mi.num;
-                for (; b; b >>= 1, a += a) {
+                for (auto b = mi.num; b; b >>= 1, a += a) {
                     if (b & 1) {
                         mult += a;
                     }
@@ -102,6 +89,18 @@ public:
     basic_mod_int operator/(const basic_mod_int &mi) const
     {
         return operator*(~mi);
+    }
+
+    template <std::unsigned_integral T>
+    basic_mod_int pow(T b) const
+    {
+        basic_mod_int ans = 1;
+        for (auto a = *this; b; a *= a, b >>= 1) {
+            if (b & 1) {
+                ans *= a;
+            }
+        }
+        return ans;
     }
 
     basic_mod_int &operator+=(const basic_mod_int &mi)
@@ -136,12 +135,16 @@ private:
 
 public:
     combination_modulo(const size_type max_n)
-        : factorial_mod(max_n + 1)
     {
-        factorial_mod[0] = 1;
-        for (size_type i = 1; i <= max_n; ++i) {
-            factorial_mod[i] = factorial_mod[i - 1] * i;
-        }
+        const auto i = std::views::iota(static_cast<size_type>(1), max_n + 2);
+        factorial_mod.reserve(i.size());
+        std::transform_exclusive_scan(
+            i.begin(), i.end(),
+            std::back_inserter(factorial_mod),
+            mod_int{1},
+            std::multiplies{},
+            [](auto x){return mod_int{x};}
+        );
     }
 
     mod_int operator()(const size_type n, const size_type r)
