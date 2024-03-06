@@ -1,7 +1,7 @@
 /*
-https://atcoder.jp/contests/abc285/submissions/50960121
-https://atcoder.jp/contests/abc340/submissions/50960125
-https://atcoder.jp/contests/abc341/submissions/50960115
+https://atcoder.jp/contests/abc285/submissions/50960173
+https://atcoder.jp/contests/abc340/submissions/50960174
+https://atcoder.jp/contests/abc341/submissions/50960177
 */
 
 template <class T>
@@ -33,7 +33,7 @@ public:
     {
         l += data.size() >> 1;
         r += data.size() >> 1;
-        T L = identity, R = identity;
+        auto L = identity, R = identity;
         while (l < r) {
             if (!(l & 1)) {
                 L = operation(L, data[l++]);
