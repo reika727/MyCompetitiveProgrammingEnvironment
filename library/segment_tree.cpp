@@ -1,71 +1,84 @@
 /*
-https://atcoder.jp/contests/abc285/submissions/50432712
-https://atcoder.jp/contests/abc340/submissions/50432774
-https://atcoder.jp/contests/abc341/submissions/50432795
+https://atcoder.jp/contests/abc285/submissions/50960121
+https://atcoder.jp/contests/abc340/submissions/50960125
+https://atcoder.jp/contests/abc341/submissions/50960115
 */
 
-template <typename T>
-class segment_tree final : private std::vector<T> {
+template <class T>
+class segment_tree final {
 private:
+    std::vector<T> data;
     std::function<T(T, T)> operation;
     T identity;
 
 public:
     segment_tree(const std::size_t n, const auto opr, const T id)
-        : operation(opr), identity(id)
+        : data((std::bit_ceil(n) << 1) - 1, id),
+          operation(opr),
+          identity(id)
     {
-        std::size_t _n = 1;
-        while (_n < n) _n <<= 1;
-        this->resize((_n << 1) - 1, identity);
     }
+
     void update(std::size_t idx, const T val)
     {
-        idx += this->size() / 2;
-        (*this)[idx] = val;
+        idx += data.size() >> 1;
+        data[idx] = val;
         while (idx) {
-            idx = (idx - 1) / 2;
-            (*this)[idx] = operation((*this)[idx * 2 + 1], (*this)[idx * 2 + 2]);
+            idx = (idx - 1) >> 1;
+            data[idx] = operation(data[idx << 1 | 1], data[(idx << 1) + 2]);
         }
     }
+
     T query(std::size_t l, std::size_t r) const
     {
-        l += this->size() / 2;
-        r += this->size() / 2;
+        l += data.size() >> 1;
+        r += data.size() >> 1;
         T L = identity, R = identity;
         while (l < r) {
-            if (l % 2 == 0) L = operation(L, (*this)[l++]);
-            if (r % 2 == 0) R = operation((*this)[--r], R);
+            if (!(l & 1)) {
+                L = operation(L, data[l++]);
+            }
+            if (!(r & 1)) {
+                R = operation(data[--r], R);
+            }
             l >>= 1;
             r >>= 1;
         }
         return operation(L, R);
     }
+
     T at(const std::size_t idx) const
     {
-        return (*this)[idx + this->size() / 2];
+        return data[idx + (data.size() >> 1)];
     }
-    static segment_tree<T> sum(const std::size_t n)
+
+    static segment_tree<T> sum(const std::size_t n, const T id = 0)
     {
-        return segment_tree<T>(n, std::plus<T>(), static_cast<T>(0));
+        return {n, std::plus<T>(), id};
     }
-    static segment_tree<T> product(const std::size_t n)
+
+    static segment_tree<T> product(const std::size_t n, const T id = 1)
     {
-        return segment_tree<T>(n, std::multiplies<T>(), static_cast<T>(1));
+        return {n, std::multiplies<T>(), id};
     }
+
     static segment_tree<T> max(const std::size_t n, const T id = std::numeric_limits<T>::min())
     {
-        return segment_tree<T>(n, static_cast<const T &(*)(const T &, const T &)>(std::max), id);
+        return {n, static_cast<const T &(*)(const T &, const T &)>(std::max), id};
     }
+
     static segment_tree<T> min(const std::size_t n, const T id = std::numeric_limits<T>::max())
     {
-        return segment_tree<T>(n, static_cast<const T &(*)(const T &, const T &)>(std::min), id);
+        return {n, static_cast<const T &(*)(const T &, const T &)>(std::min), id};
     }
-    static segment_tree<T> all(const std::size_t n)
+
+    static segment_tree<T> all(const std::size_t n, const T id = true)
     {
-        return segment_tree<T>(n, std::logical_and(), true);
+        return {n, std::logical_and(), id};
     }
-    static segment_tree<T> any(const std::size_t n)
+
+    static segment_tree<T> any(const std::size_t n, const T id = false)
     {
-        return segment_tree<T>(n, std::logical_or(), false);
+        return {n, std::logical_or(), id};
     }
 };
