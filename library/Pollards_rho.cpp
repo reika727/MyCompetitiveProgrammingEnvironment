@@ -1,38 +1,59 @@
 /*
-https://atcoder.jp/contests/abc284/submissions/50724473
+https://atcoder.jp/contests/abc284/submissions/50954316
 */
 
-template <std::unsigned_integral UInt>
+template <bool take_mod = true, std::unsigned_integral UInt>
 UInt mod_addition(UInt a, UInt b, UInt mod)
 {
-    a %= mod;
-    b %= mod;
-    if (a < mod - b) {
-        return a + b;
-    } else {
-        return a - (mod - b);
+    if constexpr (take_mod) {
+        if (a > mod) {
+            a %= mod;
+        }
+        if (b > mod) {
+            b %= mod;
+        }
     }
+    return a < mod - b ? a + b : a - (mod - b);
 };
 
-template <std::unsigned_integral UInt>
+template <bool take_mod = true, std::unsigned_integral UInt>
 UInt mod_multiply(UInt a, UInt b, UInt mod)
 {
+    if (b == 0) {
+        return 0;
+    } else if (a < std::numeric_limits<UInt>::max() / b) {
+        if (const auto prod = a * b; prod < mod) {
+            return prod;
+        } else {
+            return prod % mod;
+        }
+    }
+    if constexpr (take_mod) {
+        if (a > mod) {
+            a %= mod;
+        }
+    }
     UInt ans = 0;
-    for (; b; b >>= 1, a = mod_addition(a, a, mod)) {
+    for (; b; b >>= 1, a = mod_addition<false>(a, a, mod)) {
         if (b & 1) {
-            ans = mod_addition(ans, a, mod);
+            ans = mod_addition<false>(ans, a, mod);
         }
     }
     return ans;
 }
 
-template <std::unsigned_integral UInt>
+template <bool take_mod = true, std::unsigned_integral UInt>
 UInt mod_pow(UInt a, UInt b, UInt mod)
 {
+    if constexpr (take_mod) {
+        if (a > mod) {
+            a %= mod;
+        }
+    }
     UInt ans = 1;
-    for (; b; b >>= 1, a = mod_multiply(a, a, mod)) {
+    for (; b; b >>= 1, a = mod_multiply<false>(a, a, mod)) {
         if (b & 1) {
-            ans = mod_multiply(ans, a, mod);
+            ans = mod_multiply<false>(ans, a, mod);
         }
     }
     return ans;
@@ -48,7 +69,7 @@ private:
     {
         if (n == 2) {
             return true;
-        } else if (n < 2 || n % 2 == 0) {
+        } else if (n < 2 || !(n & 1)) {
             return false;
         }
         const auto m = n - 1;
@@ -58,11 +79,11 @@ private:
             if (a >= n) {
                 continue;
             }
-            auto x = mod_pow(a, d, n);
+            auto x = mod_pow<false>(a, d, n);
             if (x == 1) {
                 continue;
             }
-            for (auto r = 0; x != m; ++r, x = mod_pow(x, static_cast<UInt>(2), n)) {
+            for (auto r = 0; x != m; ++r, x = mod_multiply<false>(x, x, n)) {
                 if (r == s - 1 || x == 1) {
                     return false;
                 }
@@ -78,7 +99,7 @@ public:
     >
     static bool test(
         const UInt n,
-        const std::unsigned_integral auto repitition,
+        const std::size_t repitition,
         const Generator::result_type seed = std::random_device{}()
     )
     {
@@ -158,12 +179,12 @@ private:
         const Primality check_primality
     )
     {
-        if (n % 2 == 0) {
+        if (!(n & 1)) {
             return 2;
         }
         for (UInt c = 1; c < n; ++c) {
             const auto f = [n, c](const UInt x) {
-                return mod_addition(mod_pow(x, static_cast<UInt>(2), n), c, n);
+                return mod_addition<false>(mod_multiply<false>(x, x, n), c, n);
             };
             if (const auto p = search_prime_factor(n, check_primality, f)) {
                 return p;
