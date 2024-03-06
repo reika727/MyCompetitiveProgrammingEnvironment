@@ -1,5 +1,5 @@
 /*
-https://atcoder.jp/contests/practice2/submissions/50952454
+https://atcoder.jp/contests/practice2/submissions/50960142
 */
 
 template <class T>
@@ -40,11 +40,8 @@ public:
         return fold_prefix(end) - fold_prefix(begin);
     }
 
-    static Fenwick_tree<T> sum(
-        const std::size_t n,
-        const T id = static_cast<T>(0)
-    )
+    static Fenwick_tree<T> sum(const std::size_t n, const T id = 0)
     {
-        return Fenwick_tree(n, std::plus<T>(), id);
+        return {n, std::plus<T>(), id};
     }
 };
