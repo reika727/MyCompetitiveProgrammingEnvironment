@@ -1,34 +1,50 @@
 /*
-https://atcoder.jp/contests/practice2/submissions/38095389
+https://atcoder.jp/contests/practice2/submissions/50952454
 */
 
 template <class T>
-class Fenwick_tree final : private std::vector<T> {
+class Fenwick_tree final {
 private:
+    std::vector<T> data;
     std::function<T(T, T)> operation;
     T identity;
 
 public:
-    Fenwick_tree(std::size_t n, std::function<T(T, T)> opr, T id)
-        : std::vector<T>(n + 1, id), operation(opr), identity(id)
+    Fenwick_tree(
+        const std::size_t n,
+        const std::function<T(T, T)> opr,
+        const T id
+    )
+        : data(n + 1, id), operation(opr), identity(id)
     {
     }
-    void operate(std::size_t idx, T val)
+
+    void set(const std::size_t idx, const T val)
     {
-        for (std::size_t i = idx + 1; i < this->size(); i += (i & -i)) {
-            (*this)[i] = operation((*this)[i], val);
+        for (auto i = idx + 1; i < data.size(); i += i & -i) {
+            data[i] = operation(data[i], val);
         }
     }
-    T accumulate(std::size_t idx) const
+
+    T fold_prefix(const std::size_t end) const
     {
-        T result = identity;
-        for (std::size_t i = idx; i != 0; i -= (i & -i)) {
-            result = operation(result, (*this)[i]);
+        auto result = identity;
+        for (auto i = end; i; i &= i - 1) {
+            result = operation(result, data[i]);
         }
         return result;
     }
-    static Fenwick_tree<T> sum(std::size_t n)
+
+    T fold(const std::size_t begin, const std::size_t end) const
     {
-        return Fenwick_tree<T>(n, std::plus<T>(), static_cast<T>(0));
+        return fold_prefix(end) - fold_prefix(begin);
+    }
+
+    static Fenwick_tree<T> sum(
+        const std::size_t n,
+        const T id = static_cast<T>(0)
+    )
+    {
+        return Fenwick_tree(n, std::plus<T>(), id);
     }
 };
