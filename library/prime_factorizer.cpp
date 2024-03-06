@@ -1,6 +1,6 @@
 /*
-https://atcoder.jp/contests/abc342/submissions/50661111
-https://atcoder.jp/contests/abc284/submissions/50661415
+https://atcoder.jp/contests/abc342/submissions/50959358
+https://atcoder.jp/contests/abc284/submissions/50959370
 */
 
 class prime_factorizer final {
@@ -96,19 +96,15 @@ public:
         return primalities.check(n);
     }
 
-    struct factor final {
-        const std::size_t prime, exponent;
-    };
-
-    std::vector<factor> factorize(std::size_t n)
+    std::map<std::size_t, std::size_t> factorize(std::size_t n)
     {
-        std::vector<factor> factors;
+        std::map<std::size_t, std::size_t> factors;
         for (const auto prime : get_primes(n)) {
             if (n <= 1) {
                 break;
             }
             if (is_prime(n)) {
-                factors.emplace_back(n, 1);
+                factors.emplace(n, 1);
                 break;
             }
             std::size_t exponent = 0;
@@ -116,7 +112,7 @@ public:
                 ++exponent;
             }
             if (exponent != 0) {
-                factors.emplace_back(prime, exponent);
+                factors.emplace(prime, exponent);
             }
         }
         return factors;
