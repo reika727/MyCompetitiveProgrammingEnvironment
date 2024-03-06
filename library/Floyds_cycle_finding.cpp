@@ -1,20 +1,20 @@
 /*
-https://atcoder.jp/contests/abc241/submissions/50713437
+https://atcoder.jp/contests/abc241/submissions/50954650
 */
 
-template <std::integral T, class F, class U = std::make_unsigned_t<T>>
+template <class T, class F>
     requires std::is_invocable_r_v<T, F, T>
-std::tuple<U, U, T> Floyds_cycle_finding(const T init, const F f)
+std::tuple<std::size_t, std::size_t, T> Floyds_cycle_finding(const T init, const F f)
     noexcept(std::is_nothrow_invocable_v<T, F, T>)
 {
-    T tortoise = init, hare = init;
+    auto tortoise = init, hare = init;
     for (
         tortoise = f(tortoise), hare = f(f(hare));
         tortoise != hare;
         tortoise = f(tortoise), hare = f(f(hare))
     ) {
     }
-    U lambda = 0;
+    auto lambda = 0uz;
     for (
         hare = init;
         tortoise != hare;
@@ -22,8 +22,8 @@ std::tuple<U, U, T> Floyds_cycle_finding(const T init, const F f)
     ) {
         ++lambda;
     }
-    const T loop_start = hare;
-    U mu = 1;
+    const auto loop_start = hare;
+    auto mu = 1uz;
     for (
         tortoise = f(tortoise), hare = f(f(hare));
         tortoise != hare;
