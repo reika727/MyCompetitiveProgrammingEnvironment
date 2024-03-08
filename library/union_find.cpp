@@ -1,23 +1,27 @@
 /*
-https://atcoder.jp/contests/atc001/submissions/38084424
+https://atcoder.jp/contests/atc001/submissions/51001813
 */
 
+template <std::unsigned_integral UInt>
 class union_find final {
 private:
-    std::vector<unsigned long long> par, sz, rank;
-    unsigned long long cnt;
+    std::vector<UInt> par;
+    std::vector<std::size_t> sz, rank;
+    std::size_t cnt;
 
 public:
-    union_find(unsigned long long n)
+    union_find(const std::size_t n)
         : par(n), sz(n, 1), rank(n, 0), cnt(n)
     {
-        iota(par.begin(), par.end(), 0);
+        std::iota(par.begin(), par.end(), static_cast<UInt>(0));
     }
-    unsigned long long find(unsigned long long n)
+
+    UInt find(const UInt n)
     {
         return par[n] == n ? par[n] : par[n] = find(par[n]);
     }
-    void unite(unsigned long long x, unsigned long long y)
+
+    void unite(UInt x, UInt y)
     {
         x = find(x);
         y = find(y);
@@ -28,20 +32,25 @@ public:
             } else {
                 par[y] = x;
                 sz[x] += sz[y];
-                if (rank[x] == rank[y]) ++rank[x];
+                if (rank[x] == rank[y]) {
+                    ++rank[x];
+                }
             }
             --cnt;
         }
     }
-    bool is_same(unsigned long long x, unsigned long long y)
+
+    bool is_same(const UInt x, const UInt y)
     {
         return find(x) == find(y);
     }
-    unsigned long long size(unsigned long long n)
+
+    std::size_t size(const UInt n)
     {
         return sz[find(n)];
     }
-    unsigned long long count() const
+
+    std::size_t count() const noexcept
     {
         return cnt;
     }
