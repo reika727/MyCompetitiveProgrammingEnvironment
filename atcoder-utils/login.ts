@@ -7,12 +7,16 @@ async function getLoginCookieJar(userName: string, password: string) {
     await fetch(url)
     .then(response => response.headers.getSetCookie())
 
-  const csrfToken = /csrf_token:(.+?=)/.exec(decodeURIComponent(temporaryCookies[1]))?.[1]!
-
   const body = new FormData
   body.set('username', userName)
   body.set('password', password)
-  body.set('csrf_token', csrfToken)
+  for (const temporaryCookie of temporaryCookies) {
+    const matches = /csrf_token:(.+?=)/.exec(decodeURIComponent(temporaryCookie))
+    if (matches != null) {
+      body.set('csrf_token', matches[1])
+      break
+    }
+  }
 
   const cookieJar = new tough.CookieJar()
   await fetch(url, {
