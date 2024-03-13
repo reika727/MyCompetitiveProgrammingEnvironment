@@ -15,7 +15,7 @@ $(TARGET): $(SRC) $(PCH)
 	$(CXX) $< $(CXXFLAGS) -o $@
 
 $(PCH): $(HEADER)
-	mkdir -p $(@D)
+	mkdir --parents $(@D)
 	$(CXX) $< $(CXXFLAGS) -o $@
 
 .PHONY: check
@@ -28,5 +28,5 @@ clean:
 
 .PHONY: cleanall
 cleanall: clean
-	$(RM) -r bits/
+	$(RM) --recursive bits/
 	npm run clean --prefix atcoder-utils/
