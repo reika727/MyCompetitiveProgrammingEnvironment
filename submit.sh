@@ -8,18 +8,11 @@ PROBLEM_ID=$2
 
 echo 'submitting source code...'
 
-COOKIE_STRING=$(
-          jq --raw-output '.cookies[]|[.key, .value]|@csv' login.cookie.json \
-        | sed 's/"//g; s/,/=/g'                                              \
-        | tr '\n' ';'
-)
+COOKIE_STRING=$(jq --raw-output '.cookies|map("\(.key)=\(.value)")|join(";")' login.cookie.json)
 
 CSRF_TOKEN=$(
-          echo "$COOKIE_STRING"                                           \
-        | sed 's/%/\\x/g'                                                 \
-        | printf '%b' "$(cat)"                                            \
-        | grep --text --extended-regexp --only-matching 'csrf_token:.+?=' \
-        | sed 's/csrf_token://'
+          echo -e "${COOKIE_STRING//%/\\x}"                   \
+        | sed --regexp-extended 's/.*csrf_token:(.+?=).*/\1/'
 )
 
 curl "https://atcoder.jp/contests/$CONTEST_ID/submit"         \
