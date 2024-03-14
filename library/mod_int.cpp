@@ -1,7 +1,8 @@
 /*
 https://atcoder.jp/contests/abc162/submissions/50959288
-https://atcoder.jp/contests/abc145/submissions/50959272
+https://atcoder.jp/contests/abc145/submissions/51218626
 https://atcoder.jp/contests/abc333/submissions/50959297
+https://atcoder.jp/contests/abc003/submissions/51227162
 */
 
 template <std::unsigned_integral auto Mod>
@@ -125,29 +126,27 @@ public:
 };
 
 template <std::unsigned_integral auto Mod>
-class combination_modulo final {
+class basic_combination_modulo final {
 private:
     using mod_int = basic_mod_int<Mod>;
 
     std::vector<mod_int> factorial_mod;
 
-    using size_type = decltype(factorial_mod)::size_type;
-
 public:
-    combination_modulo(const size_type max_n)
+    basic_combination_modulo(const std::size_t max_n)
     {
-        const auto i = std::views::iota(static_cast<size_type>(1), max_n + 2);
+        const auto i = std::views::iota(1uz, max_n + 2);
         factorial_mod.reserve(i.size());
         std::transform_exclusive_scan(
             i.begin(), i.end(),
             std::back_inserter(factorial_mod),
             mod_int{1},
             std::multiplies{},
-            [](auto x){return mod_int{x};}
+            [](const auto x){return mod_int{x};}
         );
     }
 
-    mod_int operator()(const size_type n, const size_type r)
+    mod_int operator()(const std::size_t n, const std::size_t r) const
     {
         return n < r ? 0 : factorial_mod[n] / (factorial_mod[r] * factorial_mod[n - r]);
     }
