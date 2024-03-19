@@ -37,7 +37,12 @@ async function getLoginCookieJar(userName: string, password: string) {
 
   const revelFlash =
     await cookieJar.getCookies(url)
-    .then(cookies => decodeURIComponent(cookies[0].value))
+    .then(
+      cookies => cookies.find(
+        cookie => cookie.key === "REVEL_FLASH"
+      )
+    )
+    .then(cookie => decodeURIComponent(cookie!.value))
 
   if (revelFlash == `\0success:Welcome,+${userName}.\0`) {
     return cookieJar
