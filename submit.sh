@@ -4,7 +4,11 @@ LANGUAGE_ID_CPP_23_GPP=5028
 CONTEST_ID=$1
 PROBLEM_ID=$2
 
-./test-samples.sh "$CONTEST_ID" "$PROBLEM_ID"
+if [[ "$3" == "--force" ]]; then
+        echo -e "\e[31;1mSUBMISSION FORCED!!\e[m"
+else
+        ./test-samples.sh "$CONTEST_ID" "$PROBLEM_ID"
+fi
 
 echo 'submitting source code...'
 
