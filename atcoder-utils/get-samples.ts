@@ -23,12 +23,12 @@ await fs.readFile(cookiePath, 'utf8')
       const samples: { input: string; output: string }[] = []
       for (let i = 0; i < nodes.length; i += 2) {
         samples.push({
-          input: nodes[i]?.textContent ?? '',
-          output: nodes[i + 1]?.textContent ?? ''
+          input: nodes[i].textContent!,
+          output: nodes[i + 1].textContent!
         })
       }
 
-      const problemId = /^(.+) -/.exec(col_sm_12.querySelector('.h2')!.textContent!)?.[1]
+      const problemId = /^(.+) -/.exec(col_sm_12.querySelector('.h2')!.textContent!)![1]
 
       return [ problemId, samples ]
     }
