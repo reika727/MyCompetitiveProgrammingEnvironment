@@ -1,6 +1,7 @@
 /*
-https://atcoder.jp/contests/abc342/submissions/50959358
-https://atcoder.jp/contests/abc284/submissions/50959370
+https://atcoder.jp/contests/abc342/submissions/51443675
+https://atcoder.jp/contests/abc284/submissions/51443696
+https://atcoder.jp/contests/abc179/submissions/51443628
 */
 
 class prime_factorizer final {
@@ -116,5 +117,16 @@ public:
             }
         }
         return factors;
+    }
+
+    std::size_t count_factors(const std::size_t n)
+    {
+        const auto factors = factorize(n);
+        return std::accumulate(
+            factors.begin(), factors.end(), 1uz,
+            [](const auto acc, const auto &f) {
+                return acc * (f.second + 1);
+            }
+        );
     }
 };
