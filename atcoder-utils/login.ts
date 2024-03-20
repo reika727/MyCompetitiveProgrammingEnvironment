@@ -44,7 +44,7 @@ async function getLoginCookieJar(userName: string, password: string) {
     )
     .then(cookie => decodeURIComponent(cookie!.value))
 
-  if (revelFlash == `\0success:Welcome,+${userName}.\0`) {
+  if (revelFlash === `\0success:Welcome,+${userName}.\0`) {
     return cookieJar
   } else {
     throw new Error('login failed.')
