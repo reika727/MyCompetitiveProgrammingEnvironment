@@ -3,8 +3,10 @@
 LANGUAGE_ID_CPP_23_GPP=5028
 CONTEST_ID=$1
 PROBLEM_ID=$2
+SRC='source.cpp'
 
-if [[ "$3" == "--force" ]]; then
+if [ "$3" = "--force" ]; then
+        ./download-samples.sh "$CONTEST_ID"
         echo -e "\e[31;1mSUBMISSION FORCED!!\e[m"
 else
         ./test-samples.sh "$CONTEST_ID" "$PROBLEM_ID"
@@ -23,7 +25,7 @@ curl "https://atcoder.jp/contests/$CONTEST_ID/submit"         \
      --cookie "$COOKIE_STRING"                                \
      --form data.TaskScreenName="${CONTEST_ID}_${PROBLEM_ID}" \
      --form data.LanguageId="$LANGUAGE_ID_CPP_23_GPP"         \
-     --form sourceCode='<source.cpp'                          \
+     --form sourceCode="<$SRC"                                \
      --form csrf_token="$CSRF_TOKEN"                          \
      --silent
 
