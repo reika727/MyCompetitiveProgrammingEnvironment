@@ -3,7 +3,7 @@
 LANGUAGE_ID_CPP_23_GPP=5028
 CONTEST_ID=$1
 PROBLEM_ID=$2
-SRC='source.cpp'
+SRC=source.cpp
 
 if [ "$3" = "--force" ]; then
         ./download-samples.sh "$CONTEST_ID"

@@ -24,9 +24,11 @@ check: $(SRC) $(PCH)
 
 .PHONY: clean
 clean:
-	$(RM) $(TARGET) *.json
+	$(RM) $(TARGET)
 
 .PHONY: cleanall
 cleanall: clean
 	$(RM) --recursive bits/
+	$(RM) login.cookie.json
+	$(RM) --recursive test-cases/
 	npm run clean --prefix atcoder-utils/

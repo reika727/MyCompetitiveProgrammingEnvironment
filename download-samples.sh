@@ -1,7 +1,7 @@
 #!/bin/bash -e
 
 CONTEST_ID=$1
-JSON_NAME=$CONTEST_ID.json
+JSON_NAME=test-cases/$CONTEST_ID.json
 
 if [ -f "$JSON_NAME" ]; then
         echo "$JSON_NAME has already been created."
@@ -16,5 +16,6 @@ if ! JSON=$(node atcoder-utils/dist/get-samples login.cookie.json "$CONTEST_ID")
         exit 1
 fi
 
+mkdir --parents "$(dirname "$JSON_NAME")"
 echo "$JSON" > "$JSON_NAME"
 echo 'done.'
