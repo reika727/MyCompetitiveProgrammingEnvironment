@@ -17,8 +17,8 @@ echo 'submitting source code...'
 COOKIE_STRING=$(jq --raw-output '.cookies|map("\(.key)=\(.value)")|join(";")' login.cookie.json)
 
 CSRF_TOKEN=$(
-          echo -e "${COOKIE_STRING//%/\\x}"                   \
-        | sed --regexp-extended 's/.*csrf_token:(.+?=).*/\1/'
+          echo -e "${COOKIE_STRING//%/\\x}"                             \
+        | grep --text --only-matching --perl-regexp 'csrf_token:\K.+?='
 )
 
 curl "https://atcoder.jp/contests/$CONTEST_ID/submit"         \
