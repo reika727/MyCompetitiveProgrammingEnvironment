@@ -10,6 +10,17 @@ template<class T>inline bool chmin(T&a,T b){return a>b?a=b,true:false;}
 template<class T>inline bool chmax(T&a,T b){return a<b?a=b,true:false;}
 template<class T,class...Sizes>inline auto multdim_vector_v(T v,size_t size,Sizes...sizes){if constexpr(sizeof...(Sizes)==0)return vector(size,v);else return vector(size,multdim_vector_v(v,sizes...));}
 template<class T,class...Sizes>inline auto multdim_vector(Sizes...sizes){return multdim_vector_v(T{},sizes...);}
+namespace{
+#ifdef ONLINE_JUDGE
+constexpr auto is_online_judge=true;
+#else
+constexpr auto is_online_judge=false;
+#endif
+[[maybe_unused]]constexpr struct dbg_stream final{
+inline const dbg_stream&operator<<([[maybe_unused]]decltype(std::cerr)&(*pf)(decltype(std::cerr)&))const{if constexpr(!is_online_judge)pf(std::cerr);return*this;}
+inline const dbg_stream&operator<<([[maybe_unused]]const auto&v)const{if constexpr(!is_online_judge)std::cerr<<v;return*this;}
+}dbg;
+}
 
 int main()
 {
