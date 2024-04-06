@@ -30,5 +30,5 @@ clean:
 cleanall: clean
 	$(RM) --recursive bits/
 	$(RM) login.cookie.json
-	$(RM) --recursive test-cases/
+	$(RM) --recursive cases/
 	npm run clean --prefix atcoder-utils/

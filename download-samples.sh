@@ -1,7 +1,7 @@
 #!/bin/bash -e
 
 CONTEST_ID=$1
-JSON_NAME=test-cases/$CONTEST_ID.json
+JSON_NAME=cases/$CONTEST_ID.json
 
 if [ -f "$JSON_NAME" ]; then
         echo "$JSON_NAME has already been created."

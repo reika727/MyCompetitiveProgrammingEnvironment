@@ -2,7 +2,7 @@
 
 CONTEST_ID=$1
 PROBLEM_ID=$2
-JSON_NAME=test-cases/$CONTEST_ID.json
+JSON_NAME=cases/$CONTEST_ID.json
 EXE=compro.out
 
 ./download-samples.sh "$CONTEST_ID"
