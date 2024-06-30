@@ -1,6 +1,6 @@
 /*
-https://atcoder.jp/contests/abc338/submissions/50955486
-https://yukicoder.me/submissions/957942
+https://atcoder.jp/contests/abc338/submissions/55104140
+https://yukicoder.me/submissions/992204
 */
 
 template <std::default_initializable T, size_t Dimension>
@@ -9,13 +9,13 @@ class imos final {
     friend imos<T, Dimension + 1>;
 
 private:
-    std::vector<
-        std::conditional_t<
-            Dimension == 1,
-            T,
-            imos<T, Dimension - 1>
-        >
-    > lower_dimensions;
+    using lower_dimension_t = std::conditional_t<
+        Dimension == 1,
+        T,
+        imos<T, Dimension - 1>
+    >;
+
+    std::vector<lower_dimension_t> lower_dimensions;
 
     std::size_t cast_index(const std::ptrdiff_t index) const noexcept
     {
@@ -123,9 +123,7 @@ public:
             lower_dimensions[i + 1] += lower_dimensions[i];
         }
         if constexpr (Dimension > 1) {
-            for (auto &lower_dimension : lower_dimensions) {
-                lower_dimension.accumulate();
-            }
+            std::ranges::for_each(lower_dimensions, &lower_dimension_t::accumulate);
         }
     }
 };
