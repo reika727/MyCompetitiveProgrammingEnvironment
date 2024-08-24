@@ -2,6 +2,7 @@
 https://atcoder.jp/contests/abc342/submissions/51443675
 https://atcoder.jp/contests/abc284/submissions/51443696
 https://atcoder.jp/contests/abc179/submissions/51443628
+https://atcoder.jp/contests/abc368/submissions/57101810
 */
 
 class prime_factorizer final {
@@ -126,6 +127,17 @@ public:
             factors.begin(), factors.end(), 1uz,
             [](const auto acc, const auto &f) {
                 return acc * (f.second + 1);
+            }
+        );
+    }
+
+    std::size_t count_prime_factors_with_multiplicity(const std::size_t n)
+    {
+        const auto factors = factorize(n);
+        return std::accumulate(
+            factors.begin(), factors.end(), 0uz,
+            [](const auto acc, const auto &f) {
+                return acc + f.second;
             }
         );
     }
