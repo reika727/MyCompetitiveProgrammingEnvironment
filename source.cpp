@@ -20,7 +20,7 @@ constexpr auto is_online_judge=false;
 #endif
 [[maybe_unused]]constexpr struct dbg_stream final{
 inline const dbg_stream&operator<<([[maybe_unused]]decltype(std::cerr)&(*pf)(decltype(std::cerr)&))const{if constexpr(!is_online_judge)pf(std::cerr);return*this;}
-inline const dbg_stream&operator<<([[maybe_unused]]const auto&v)const{if constexpr(!is_online_judge)std::cerr<<v;return*this;}
+inline const dbg_stream&operator<<([[maybe_unused]]const auto&v)const{if constexpr(!is_online_judge)std::cerr<<"\033[91m"<<v<<"\033[0m";return*this;}
 }dbg;
 }
 
