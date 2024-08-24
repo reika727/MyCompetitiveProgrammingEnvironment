@@ -23,6 +23,7 @@ inline const dbg_stream&operator<<([[maybe_unused]]decltype(std::cerr)&(*pf)(dec
 inline const dbg_stream&operator<<([[maybe_unused]]const auto&v)const{if constexpr(!is_online_judge)std::cerr<<"\033[91m"<<v<<"\033[0m";return*this;}
 }dbg;
 }
+#define LOG(x) dbg<<#x" = "<<x<<endl;
 
 int main()
 {
