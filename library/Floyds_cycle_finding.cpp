@@ -1,5 +1,6 @@
 /*
 https://atcoder.jp/contests/abc241/submissions/50954650
+https://atcoder.jp/contests/abc377/submissions/59203292
 */
 
 template <class T, class F>
