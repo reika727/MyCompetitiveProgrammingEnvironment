@@ -3,12 +3,13 @@
 CONTEST_ID=$1
 JSON_NAME=cases/$CONTEST_ID.json
 
+./login.sh
+
 if [ -f "$JSON_NAME" ]; then
         echo "$JSON_NAME has already been created."
         exit 0
 fi
 
-./login.sh
 echo "saving to $JSON_NAME..."
 
 if ! JSON=$(node atcoder-utils/dist/get-samples login.cookie.json "$CONTEST_ID"); then
