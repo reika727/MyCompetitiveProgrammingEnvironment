@@ -1,7 +1,7 @@
 #!/bin/bash
 
 if [ -f login.cookie.json ]; then
-        echo 'already loged in to AtCoder.'
+        echo 'already logged in to AtCoder.'
         exit 0
 fi
 
@@ -19,4 +19,4 @@ DEFAULT_UMASK=$(umask -p)
 umask 0077
 echo "$JSON" > login.cookie.json
 eval "$DEFAULT_UMASK"
-echo 'successfully loged in to AtCoder.'
+echo 'successfully logged in to AtCoder.'
