@@ -1,7 +1,8 @@
 import tough from 'tough-cookie'
+import { Cookie } from 'tough-cookie'
 
 async function getLoginCookieJar(userName: string, password: string) {
-  const url = 'https://atcoder.jp/login'
+  const url = new URL('https://atcoder.jp/login')
 
   const temporaryCookies =
     await fetch(url)
@@ -35,18 +36,14 @@ async function getLoginCookieJar(userName: string, password: string) {
   })
   .then(response => response.headers.getSetCookie())
   .then(setCookie => setCookie.forEach(
-      cookie => cookieJar.setCookie(cookie, url)
+      cookie => (cookieJar as any).setCookie(cookie, url)
     )
   )
 
   const revelFlash =
-    await cookieJar.getCookies(url)
-    .then(
-      cookies => cookies.find(
-        cookie => cookie.key === "REVEL_FLASH"
-      )
-    )
-    .then(cookie => decodeURIComponent(cookie!.value))
+    await (cookieJar as any).store
+    .findCookie(url.hostname, '/', 'REVEL_FLASH')
+    .then((cookie: Cookie) => decodeURIComponent(cookie.value))
 
   if (revelFlash === `\0success:Welcome,+${userName}.\0`) {
     return cookieJar
