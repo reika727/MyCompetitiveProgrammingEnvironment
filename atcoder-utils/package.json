@@ -2,8 +2,7 @@
   "name": "atcoder-utils",
   "version": "1.0.0",
   "dependencies": {
-    "jsdom": "^25.0.1",
-    "tough-cookie": "^5.0.0"
+    "jsdom": "^25.0.1"
   },
   "type": "module"
 }
