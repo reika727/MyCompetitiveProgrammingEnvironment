@@ -1,4 +1,4 @@
-import tough from 'tough-cookie'
+import { CookieJar } from 'jsdom'
 
 async function getLoginCookieJar(userName: string, password: string) {
   const url = new URL('https://atcoder.jp/login')
@@ -22,7 +22,7 @@ async function getLoginCookieJar(userName: string, password: string) {
   body.set('password', password)
   body.set('csrf_token', csrfToken)
 
-  const cookieJar = new tough.CookieJar()
+  const cookieJar = new CookieJar()
   await fetch(url, {
     method: 'POST',
     redirect: 'manual',
