@@ -36,12 +36,12 @@ async function getLoginCookieJar(userName: string, password: string) {
   })
   .then(response => response.headers.getSetCookie())
   .then(setCookie => setCookie.forEach(
-      cookie => (cookieJar as any).setCookie(cookie, url)
+      cookie => cookieJar.setCookie(cookie, url)
     )
   )
 
   const revelFlash =
-    await (cookieJar as any).store
+    await cookieJar.store
     .findCookie(url.hostname, '/', 'REVEL_FLASH')
     .then((cookie: Cookie) => decodeURIComponent(cookie.value))
 
