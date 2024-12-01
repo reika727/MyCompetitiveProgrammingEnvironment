@@ -1,5 +1,4 @@
 import tough from 'tough-cookie'
-import { Cookie } from 'tough-cookie'
 
 async function getLoginCookieJar(userName: string, password: string) {
   const url = new URL('https://atcoder.jp/login')
