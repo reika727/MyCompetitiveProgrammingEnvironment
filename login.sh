@@ -10,7 +10,7 @@ read -rsp 'Password: ' PASSWORD
 echo
 echo 'logging in to AtCoder...'
 
-if ! JSON=$(node atcoder-utils/dist/login "$USER_NAME" "$PASSWORD"); then
+if ! JSON=$(npx tsx atcoder-utils/login.ts "$USER_NAME" "$PASSWORD"); then
         echo 'login failed.'
         exit 1
 fi

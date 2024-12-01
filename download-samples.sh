@@ -12,7 +12,7 @@ fi
 
 echo "saving to $JSON_NAME..."
 
-if ! JSON=$(node atcoder-utils/dist/get-samples login.cookie.json "$CONTEST_ID"); then
+if ! JSON=$(npx tsx atcoder-utils/get-samples.ts login.cookie.json "$CONTEST_ID"); then
         echo "could not create $JSON_NAME."
         exit 1
 fi
