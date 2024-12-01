@@ -11,12 +11,10 @@ await fs.readFile(cookiePath, 'utf8')
   )
 )
 .then(
-  dom => Array.from(
-    dom.window.document.querySelectorAll('.col-sm-12:not(.next-page):not(.alert)')
-  )
+  dom => dom.window.document.querySelectorAll('.col-sm-12:not(.next-page):not(.alert)')
 )
 .then(
-  col_sm_12s => col_sm_12s.map(
+  col_sm_12s => col_sm_12s.values().map(
     async col_sm_12 => {
       const nodes = col_sm_12.querySelectorAll('#task-statement > .lang > .lang-ja h3+pre')
 
