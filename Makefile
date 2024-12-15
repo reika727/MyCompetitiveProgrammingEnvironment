@@ -4,7 +4,7 @@ HEADER    := $(G++BINDIR)/../include/c++/$(shell $(CXX) -dumpversion)/$(shell $(
 PCH       := bits/stdc++.h.gch
 SRC       := source.cpp
 TARGET    := compro.out
-CXXFLAGS  := -std=gnu++2b -O2 -Wall -Wextra -mtune=native -march=native -fconstexpr-depth=2147483647 -fconstexpr-loop-limit=2147483647 -fconstexpr-ops-limit=2147483647
+CXXFLAGS  := -std=gnu++2b -O2 -Wall -Wextra -Wshadow -mtune=native -march=native -fconstexpr-depth=2147483647 -fconstexpr-loop-limit=2147483647 -fconstexpr-ops-limit=2147483647
 
 .PHONY: test
 test: $(TARGET)
