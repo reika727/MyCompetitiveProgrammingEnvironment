@@ -1,8 +1,8 @@
 {
   "name": "atcoder-utils",
   "version": "1.0.0",
+  "type": "module",
   "dependencies": {
     "jsdom": "^25.0.1"
-  },
-  "type": "module"
+  }
 }
