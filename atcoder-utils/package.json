@@ -1,7 +1,6 @@
 {
   "name": "atcoder-utils",
   "version": "1.0.0",
-  "type": "module",
   "dependencies": {
     "jsdom": "^26.0.0"
   }
