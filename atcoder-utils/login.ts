@@ -45,8 +45,8 @@ const revelFlash =
   .findCookie(url.hostname, '/', 'REVEL_FLASH')
   .then(cookie => decodeURIComponent(cookie.value))
 
-if (revelFlash === `\0success:Welcome,+${userName}.\0`) {
-  console.log(JSON.stringify(cookieJar, null, 2))
-} else {
+if (revelFlash !== `\0success:Welcome,+${userName}.\0`) {
   throw new Error('login failed.')
 }
+
+console.log(JSON.stringify(cookieJar, null, 2))
