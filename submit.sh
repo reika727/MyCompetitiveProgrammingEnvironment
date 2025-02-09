@@ -6,11 +6,12 @@ PROBLEM_ID=$2
 SRC=source.cpp
 
 if [ "$3" = "--force" ]; then
-        ./download-samples.sh "$CONTEST_ID"
         echo -e "\e[31;1mSUBMISSION FORCED!!\e[m"
 else
         ./test-samples.sh "$CONTEST_ID" "$PROBLEM_ID"
 fi
+
+./login.sh
 
 echo 'submitting source code...'
 
