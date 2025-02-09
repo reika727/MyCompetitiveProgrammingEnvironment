@@ -5,8 +5,8 @@ CONTEST_ID=$1
 PROBLEM_ID=$2
 SRC=source.cpp
 
-if [ "$3" = "--force" ]; then
-        echo -e "\e[31;1mSUBMISSION FORCED!!\e[m"
+if [ "$3" = '--force' ]; then
+        echo -e '\e[31;1mSUBMISSION FORCED!!\e[m'
 else
         ./test-samples.sh "$CONTEST_ID" "$PROBLEM_ID"
 fi
