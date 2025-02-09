@@ -3,18 +3,18 @@ import jsdom from 'jsdom'
 
 const [ cookiePath, contestId ] = process.argv.slice(2)
 
-await fs.readFile(cookiePath, 'utf8')
-.then(
-  json => jsdom.JSDOM.fromURL(
-    `https://atcoder.jp/contests/${contestId}/tasks_print`,
-    { cookieJar: jsdom.CookieJar.fromJSON(json) }
-  )
+const json = await fs.readFile(cookiePath, 'utf8')
+
+const dom = await jsdom.JSDOM.fromURL(
+  `https://atcoder.jp/contests/${contestId}/tasks_print`,
+  { cookieJar: jsdom.CookieJar.fromJSON(json) }
 )
-.then(
-  dom => dom.window.document.querySelectorAll('.col-sm-12:not(.next-page):not(.alert)')
-)
-.then(
-  col_sm_12s => col_sm_12s.values().map(
+
+const downloadTasks =
+  dom.window.document
+  .querySelectorAll('.col-sm-12:not(.next-page):not(.alert)')
+  .values()
+  .map(
     async col_sm_12 => {
       const nodes = col_sm_12.querySelectorAll('#task-statement > .lang > .lang-ja h3+pre')
 
@@ -31,8 +31,5 @@ await fs.readFile(cookiePath, 'utf8')
       return [ problemId, samples ]
     }
   )
-)
-.then(downloadTasks => Promise.all(downloadTasks))
-.then(samples =>
-  console.log(JSON.stringify(Object.fromEntries(samples), null, 2))
-)
+
+console.log(JSON.stringify(Object.fromEntries(await Promise.all(downloadTasks)), null, 2))

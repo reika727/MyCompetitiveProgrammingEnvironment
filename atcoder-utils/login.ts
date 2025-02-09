@@ -34,8 +34,8 @@ await fetch(url, {
   ),
   body
 })
-.then(response => response.headers.getSetCookie())
-.then(setCookie => setCookie.forEach(
+.then(response =>
+  response.headers.getSetCookie().forEach(
     cookie => cookieJar.setCookie(cookie, url)
   )
 )
