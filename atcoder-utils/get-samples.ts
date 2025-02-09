@@ -26,7 +26,7 @@ const downloadTasks =
         })
       }
 
-      const problemId = /^(.+) -/.exec(col_sm_12.querySelector('.h2')!.textContent!)![1]
+      const problemId = /^(.+) -/.exec(col_sm_12.getElementsByClassName('h2')[0]!.textContent!)![1]
 
       return [ problemId, samples ]
     }
