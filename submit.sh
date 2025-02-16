@@ -27,11 +27,11 @@ CSRF_TOKEN=$(
 )
 
 curl "https://atcoder.jp/contests/$CONTEST_ID/submit"         \
+     --request POST                                           \
      --cookie "$COOKIE_STRING"                                \
      --form data.TaskScreenName="${CONTEST_ID}_${PROBLEM_ID}" \
      --form data.LanguageId="$LANGUAGE_ID_CPP_23_GPP"         \
      --form sourceCode="<$SRC"                                \
-     --form csrf_token="$CSRF_TOKEN"                          \
-     --silent
+     --form csrf_token="$CSRF_TOKEN"
 
 echo 'done.'
