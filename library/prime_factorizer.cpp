@@ -73,6 +73,29 @@ private:
         }
     }
 
+    // NOT TESTED YET
+    /*
+    template<std::weakly_incrementable Out>
+        requires std::indirectly_writable<Out, std::size_t>
+    void get_divisors(
+        const std::map<std::size_t, std::size_t>::const_iterator begin,
+        const std::map<std::size_t, std::size_t>::const_iterator end,
+        Out out,
+        std::size_t divisor = 1
+    )
+    {
+        if (begin == end) {
+            *out++ = divisor;
+            return;
+        }
+        const auto [prime, exponent] = *begin;
+        for (std::size_t i = 0; i <= exponent; ++i) {
+            get_divisors(std::next(begin), end, out, divisor);
+            divisor *= prime;
+        }
+    }
+    */
+
 public:
     prime_factorizer() = default;
 
@@ -119,6 +142,17 @@ public:
         }
         return factors;
     }
+
+    // NOT TESTED YET
+    /*
+    template<std::weakly_incrementable Out>
+        requires std::indirectly_writable<Out, std::size_t>
+    void get_divisors(const std::size_t n, Out out)
+    {
+        const auto factors = factorize(n);
+        get_divisors(factors.begin(), factors.end(), out);
+    }
+    */
 
     std::size_t count_factors(const std::size_t n)
     {
