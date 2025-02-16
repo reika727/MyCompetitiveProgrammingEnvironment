@@ -9,7 +9,7 @@ EXE=compro.out
 
 make "$EXE"
 
-if ! TEST_CASES=$(jq --compact-output --raw-output ."$PROBLEM_ID"[] "$JSON_NAME"); then
+if ! TEST_CASES=$(jq --compact-output --raw-output ".${PROBLEM_ID}[]" "$JSON_NAME"); then
         echo "Problem ID '$PROBLEM_ID' does not exist."
         exit 1
 fi
