@@ -23,8 +23,7 @@ body.set('username', userName)
 body.set('password', password)
 body.set('csrf_token', csrfToken)
 
-const cookieJar = new CookieJar()
-await fetch(url, {
+const loginResponse = await fetch(url, {
   method: 'POST',
   redirect: 'manual',
   headers: new Headers(
@@ -34,18 +33,12 @@ await fetch(url, {
   ),
   body
 })
-.then(response =>
-  response.headers.getSetCookie().forEach(
-    cookie => cookieJar.setCookie(cookie, url)
-  )
-)
 
-const revelFlash =
-  await cookieJar.store
-  .findCookie(url.hostname, '/', 'REVEL_FLASH')
-  .then(cookie => decodeURIComponent(cookie.value))
+const cookieJar = new CookieJar()
+loginResponse.headers.getSetCookie().forEach(cookie => cookieJar.setCookie(cookie, url))
 
-if (revelFlash !== `\0success:Welcome,+${userName}.\0`) {
+const revelFlash = await cookieJar.store.findCookie(url.hostname, '/', 'REVEL_FLASH')
+if (decodeURIComponent(revelFlash.value) !== `\0success:Welcome,+${userName}.\0`) {
   throw new Error('login failed.')
 }
 
