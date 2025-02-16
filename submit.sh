@@ -17,9 +17,13 @@ echo 'submitting source code...'
 
 COOKIE_STRING=$(jq --raw-output '.cookies|map("\(.key)=\(.value)")|join(";")' login.cookie.json)
 
+# jq には将来的に @urid が実装されるかもしれないのでそのときはもう少し短く書けそう
+# https://github.com/jqlang/jq/pull/3161
 CSRF_TOKEN=$(
-          echo -e "${COOKIE_STRING//%/\\x}"                             \
-        | grep --text --only-matching --perl-regexp 'csrf_token:\K.+?='
+        jq --raw-output                                                                                                                   \
+        '.cookies|map(select(.key=="REVEL_SESSION"))|first|.value|match("csrf_token%3A(.+?)%00")|.captures|first|.string|gsub("%";"\\x")' \
+        login.cookie.json                                                                                                                 \
+        | echo -e "$(cat)"
 )
 
 curl "https://atcoder.jp/contests/$CONTEST_ID/submit"         \
