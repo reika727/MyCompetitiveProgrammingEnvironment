@@ -26,12 +26,16 @@ CSRF_TOKEN=$(
         | echo -e "$(cat)"
 )
 
-curl "https://atcoder.jp/contests/$CONTEST_ID/submit"         \
+cookie="$COOKIE_STRING"  \
+csrf_token="$CSRF_TOKEN" \
+curl --variable '%cookie'                                     \
+     --variable '%csrf_token'                                 \
+     --url "https://atcoder.jp/contests/$CONTEST_ID/submit"   \
      --request POST                                           \
-     --cookie "$COOKIE_STRING"                                \
+     --expand-cookie '{{cookie}}'                             \
      --form data.TaskScreenName="${CONTEST_ID}_${PROBLEM_ID}" \
      --form data.LanguageId="$LANGUAGE_ID_CPP_23_GPP"         \
      --form sourceCode="<$SRC"                                \
-     --form csrf_token="$CSRF_TOKEN"
+     --expand-form csrf_token='{{csrf_token}}'
 
 echo 'done.'
