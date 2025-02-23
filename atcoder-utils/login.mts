@@ -1,6 +1,8 @@
 import { CookieJar } from 'jsdom'
+import * as readlineSync from 'readline-sync'
 
-const [ userName, password ] = process.argv.slice(2)
+const userName = readlineSync.question('User Name: ')
+const password = readlineSync.question('Password: ', { hideEchoBack: true, mask: '' })
 
 const url = new URL('https://atcoder.jp/login')
 

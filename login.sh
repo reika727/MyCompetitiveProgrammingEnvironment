@@ -5,12 +5,9 @@ if [ -f login.cookie.json ]; then
         exit 0
 fi
 
-read -rp 'User Name: ' USER_NAME
-read -rsp 'Password: ' PASSWORD
-echo
 echo 'logging in to AtCoder...'
 
-if ! JSON=$(npx --yes tsx atcoder-utils/login.mts "$USER_NAME" "$PASSWORD"); then
+if ! JSON=$(npx --yes tsx atcoder-utils/login.mts); then
         echo 'login failed.'
         exit 1
 fi
