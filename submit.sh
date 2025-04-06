@@ -11,28 +11,22 @@ else
         ./test-samples.sh "$CONTEST_ID" "$PROBLEM_ID"
 fi
 
-./login.sh
-
 echo 'submitting source code...'
 
-COOKIE_STRING=$(jq --raw-output '.cookies|map("\(.key)=\(.value)")|join(";")' login.cookie.json)
+read -r REVEL_SESSION < .REVEL_SESSION
 
-# jq には将来的に @urid が実装されるかもしれないのでそのときはもう少し短く書けそう
-# https://github.com/jqlang/jq/pull/3161
 CSRF_TOKEN=$(
-        jq --raw-output                                                                                                                   \
-        '.cookies|map(select(.key=="REVEL_SESSION"))|first|.value|match("csrf_token%3A(.+?)%00")|.captures|first|.string|gsub("%";"\\x")' \
-        login.cookie.json                                                                                                                 \
-        | echo -e "$(cat)"
+          echo -e "${REVEL_SESSION//\%/\\x}" \
+        | grep --text --only-matching --perl-regexp 'csrf_token:\K.+?='
 )
 
-cookie="$COOKIE_STRING"  \
+revel_session="$REVEL_SESSION"  \
 csrf_token="$CSRF_TOKEN" \
-curl --variable '%cookie'                                     \
+curl --variable '%revel_session'                              \
      --variable '%csrf_token'                                 \
      --url "https://atcoder.jp/contests/$CONTEST_ID/submit"   \
      --request POST                                           \
-     --expand-cookie '{{cookie}}'                             \
+     --expand-cookie 'REVEL_SESSION={{revel_session}}'        \
      --form data.TaskScreenName="${CONTEST_ID}_${PROBLEM_ID}" \
      --form data.LanguageId="$LANGUAGE_ID_CPP_23_GPP"         \
      --form sourceCode="<$SRC"                                \

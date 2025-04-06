@@ -1,13 +1,15 @@
 import fs from 'fs/promises'
 import jsdom from 'jsdom'
 
-const [ cookiePath, contestId ] = process.argv.slice(2)
+const [ revelSessionPath, contestId ] = process.argv.slice(2)
 
-const json = await fs.readFile(cookiePath, 'utf8')
+const revelSession = await fs.readFile(revelSessionPath, 'utf8')
+const cookieJar = new jsdom.CookieJar()
+cookieJar.setCookie(`REVEL_SESSION=${revelSession}`, 'https://atcoder.jp')
 
 const dom = await jsdom.JSDOM.fromURL(
   `https://atcoder.jp/contests/${contestId}/tasks_print`,
-  { cookieJar: jsdom.CookieJar.fromJSON(json) }
+  { cookieJar }
 )
 
 const problems =

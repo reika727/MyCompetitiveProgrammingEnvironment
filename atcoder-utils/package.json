@@ -2,7 +2,6 @@
   "name": "atcoder-utils",
   "version": "1.0.0",
   "dependencies": {
-    "jsdom": "^26.0.0",
-    "readline-sync": "^1.4.10"
+    "jsdom": "^26.0.0"
   }
 }

@@ -8,11 +8,9 @@ if [ -f "$JSON_NAME" ]; then
         exit 0
 fi
 
-./login.sh
-
 echo "saving to $JSON_NAME..."
 
-if ! JSON=$(npx --yes tsx atcoder-utils/get-samples.mts login.cookie.json "$CONTEST_ID"); then
+if ! JSON=$(npx --yes tsx atcoder-utils/get-samples.mts .REVEL_SESSION "$CONTEST_ID"); then
         echo "could not create $JSON_NAME."
         exit 1
 fi
